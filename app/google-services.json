@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "647544275082",
+    "firebase_url": "https://lokalsolutionaa-default-rtdb.firebaseio.com",
+    "project_id": "lokalsolutionaa",
+    "storage_bucket": "lokalsolutionaa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647544275082:android:81e8cf2aa6b6e3f209ed73",
+        "android_client_info": {
+          "package_name": "com.easy.lokalsolution"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "647544275082-7k4a9vli2m83lfovdd6k48tjb6s5feav.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx38xktG9EQdyNJT295PSjzPXSdV8-eE0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "647544275082-7k4a9vli2m83lfovdd6k48tjb6s5feav.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

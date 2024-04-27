@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/news"
+        android:icon="@drawable/pppe"
+        android:title="News" />
+    <item
+        android:id="@+id/query"
+        android:icon="@drawable/ww3"
+        android:title="Query" />
+    <item
+        android:id="@+id/ids"
+        android:icon="@drawable/ww2"
+        android:title="Search ID" />
+
+</menu>

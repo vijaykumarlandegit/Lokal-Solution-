@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.SecondFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <include layout="@layout/postshimmer" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiprefresh"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/queryrec"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/rentsort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="40dp"
+                android:paddingBottom="10dp"
+                android:text="भाड्याने देणे (Rent)"
+
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
+
+
+    <View
+        android:id="@+id/justview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+    </View>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sortboxview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="40dp"
+        android:visibility="gone"
+        app:cardCornerRadius="5dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.83">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="क्रमवारी लावा (sort by)"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
+            <View
+                android:id="@+id/view7"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lightblack" />
+
+            <TextView
+                android:id="@+id/rentout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="40dp"
+                android:paddingBottom="10dp"
+                android:text="किरायाने देणे (Rent)"
+
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/rentin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="40dp"
+
+                android:paddingBottom="10dp"
+                android:text="किरायाने पाहिजे (Rent)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/needbuy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="40dp"
+
+                android:paddingBottom="10dp"
+                android:text="विकत पाहिजे (Buy)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sellout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="40dp"
+
+                android:paddingBottom="10dp"
+                android:text="विक्री आहे (Sell)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/jobsort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="40dp"
+                android:paddingBottom="10dp"
+                android:text="नोकरी आहे (Job)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/needjob"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="40dp"
+                android:paddingBottom="10dp"
+                android:text="नोकरी पाहिजे (Job)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/needperson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="40dp"
+
+                android:paddingBottom="10dp"
+                android:text="कामासाठी व्यक्ती पाहिजे (Need)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/othersort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+
+                android:paddingEnd="40dp"
+                android:paddingBottom="10dp"
+                android:text="ईतर (Other)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/allsort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+
+                android:paddingEnd="40dp"
+                android:paddingBottom="10dp"
+                android:text="सर्व (All)"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/sort"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:layout_gravity="bottom|right"
+        android:background="@drawable/funnerback"
+        android:layout_margin="30dp"
+        app:srcCompat="@drawable/aab"
+        app:tint="@color/mainblue" />
+
+
+</FrameLayout>

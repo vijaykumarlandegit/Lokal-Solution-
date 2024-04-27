@@ -1,0 +1,90 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Lokal Solution</string>
+    <string name="default_web_client_id" />
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="signin">SignIn</string>
+
+    <string-array name="QueryType">
+        <item>किरायाने देणे (Rent)</item>
+        <item>किरायाने पाहिजे (Rent)</item>
+        <item>विकत पाहिजे (Buy)</item>
+        <item>विक्री आहे (Sell)</item>
+        <item>नोकरी आहे (Job)</item>
+        <item>नोकरी पाहिजे (Job)</item>
+        <item>कामासाठी व्यक्ती पाहिजे (Need)</item>
+        <item>वरील पैकी वेगळे (Other)</item>
+
+    </string-array>
+
+    <string-array name="QueryType1">
+        <item></item>
+        <item>किरायाने देणे (Rent)</item>
+        <item>किरायाने पाहिजे (Rent)</item>
+        <item>विकत पाहिजे (Buy)</item>
+        <item>विक्री आहे (Sell)</item>
+        <item>नोकरी आहे (Job)</item>
+        <item>नोकरी पाहिजे (Job)</item>
+        <item>कामासाठी व्यक्ती पाहिजे (Need)</item>
+        <item>वरील पैकी वेगळे (Other)</item>
+    </string-array>
+
+    <string-array name="Gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string-array name="IdType">
+        <item>Mechanic</item>
+        <item>Plumber</item>
+        <item>Electrician</item>
+        <item>Electronic Technician</item>
+        <item>Painter</item>
+        <item>Carpenter</item>
+        <item>Event Management</item>
+        <item>Photographer</item>
+        <item>Home Shifting</item>
+        <item>Other</item>
+
+    </string-array>
+    <string-array name="IdType1">
+        <item></item>
+        <item>Mechanic</item>
+        <item>Plumber</item>
+        <item>Electrician</item>
+        <item>Electronic Technician</item>
+        <item>Painter</item>
+        <item>Carpenter</item>
+        <item>Event Management</item>
+        <item>Photographer</item>
+        <item>Home Shifting</item>
+        <item>Other</item>
+
+    </string-array>
+    <string-array name="NewsType">
+        <item>News</item>
+        <item>Advertisement</item>
+        <item>Story</item>
+        <item>Poetry</item>
+        <item>Announcement</item>
+        <item>Puzzle</item>
+        <item>GK Question</item>
+        <item>Other</item>
+
+    </string-array>
+
+    <string-array name="NewsType1">
+        <item></item>
+        <item>News</item>
+        <item>Advertisement</item>
+        <item>Story</item>
+        <item>Poetry</item>
+        <item>Announcement</item>
+        <item>Puzzle</item>
+        <item>GK Question</item>
+        <item>Other</item>
+    </string-array>
+    <string name="title_activity_maps">MapsActivity</string>
+
+
+</resources>
