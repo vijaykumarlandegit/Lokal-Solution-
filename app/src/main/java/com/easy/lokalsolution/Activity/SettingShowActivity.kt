@@ -13,57 +13,47 @@ class SettingShowActivity() : AppCompatActivity() {
     var binding: ActivitySettingShowBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySettingShowBinding.inflate(getLayoutInflater())
-        setContentView(binding!!.getRoot())
-        val type: String? = getIntent().getStringExtra("type")
+        binding = ActivitySettingShowBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
+        val type: String? = intent.getStringExtra("type")
         if ((type == "contactus")) {
-            binding!!.contacusview.setVisibility(View.VISIBLE)
+            binding!!.contacusview.visibility = View.VISIBLE
         }
         if ((type == "aboutus")) {
-            binding!!.aboutusview.setVisibility(View.VISIBLE)
+            binding!!.aboutusview.visibility = View.VISIBLE
         }
         if ((type == "pp")) {
-            binding!!.privacypolicyview.setVisibility(View.VISIBLE)
+            binding!!.privacypolicyview.visibility = View.VISIBLE
         }
         if ((type == "tc")) {
-            binding!!.termconditionview.setVisibility(View.VISIBLE)
+            binding!!.termconditionview.visibility = View.VISIBLE
         }
-        binding!!.contactuscontact.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                val intent: Intent = Intent(Intent.ACTION_DIAL)
-                intent.setData(Uri.parse("tel:7028297606"))
+        binding!!.contactuscontact.setOnClickListener {
+            val intent: Intent = Intent(Intent.ACTION_DIAL)
+            intent.setData(Uri.parse("tel:7028297606"))
+            startActivity(intent)
+        }
+        binding!!.contactuswhatsapp.setOnClickListener {
+            val wn = "https://wa.me/+917028297606?text= Hi is anyone available?"
+            val intent  = Intent(Intent.ACTION_VIEW)
+            intent.setData(Uri.parse(wn))
+            startActivity(intent)
+        }
+        binding!!.contactusemail.setOnClickListener {
+            try {
+                val intent: Intent =
+                    Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + "help@resieasy.com"))
+                intent.putExtra(Intent.EXTRA_SUBJECT, "I have problem in ResiEasy Application")
+                intent.putExtra(Intent.EXTRA_TEXT, "Write your problem")
                 startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(
+                    this@SettingShowActivity,
+                    "Something is wrong",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        })
-        binding!!.contactuswhatsapp.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                val wn: String = "https://wa.me/+917028297606?text= Hi is anyone available?"
-                val intent: Intent = Intent(Intent.ACTION_VIEW)
-                intent.setData(Uri.parse(wn))
-                startActivity(intent)
-            }
-        })
-        binding!!.contactusemail.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                try {
-                    val intent: Intent =
-                        Intent(Intent.ACTION_VIEW, Uri.parse("mailto:" + "help@resieasy.com"))
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "I have problem in ResiEasy Application")
-                    intent.putExtra(Intent.EXTRA_TEXT, "Write your problem")
-                    startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    Toast.makeText(
-                        this@SettingShowActivity,
-                        "Something is wrong",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        })
-        binding!!.back.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                finish()
-            }
-        })
+        }
+        binding!!.back.setOnClickListener { finish() }
     }
 }

@@ -82,17 +82,16 @@ class AddIdActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             val id3 = binding!!.servitimergroupview.checkedRadioButtonId
             val radioButton3 = findViewById<RadioButton>(id3)
             if ((radioButton1.text.toString() == "Yes")) {
-                if (!binding!!.coursename.text.toString().isEmpty()) {
+                if (binding!!.coursename.text.toString().isNotEmpty()) {
                     val cname = binding!!.coursename.text.toString()
                     val cdetail = binding!!.coursedetails.text.toString()
                     if ((radioButton2.text.toString() == "Yes")) {
-                        if (!binding!!.shopname.text.toString()
-                                .isEmpty() && !binding!!.shopaddress.text.toString().isEmpty()
+                        if (binding!!.shopname.text.toString().isNotEmpty() && binding!!.shopaddress.text.toString().isNotEmpty()
                         ) {
                             val sname = binding!!.shopname.text.toString()
                             val saddress = binding!!.shopaddress.text.toString()
                             if ((radioButton3.text.toString() == "Customize time")) {
-                                if (!binding!!.customtime.text.toString().isEmpty()) {
+                                if (binding!!.customtime.text.toString().isNotEmpty()) {
                                     val sstime = binding!!.customtime.text.toString()
                                     uploaddata(cname, cdetail, sname, saddress, sstime)
                                 } else {
@@ -134,7 +133,7 @@ class AddIdActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                         val sname = "!@#$%"
                         val saddress = "!@#$%"
                         if ((radioButton3.text.toString() == "Customize time")) {
-                            if (!binding!!.customtime.text.toString().isEmpty()) {
+                            if (binding!!.customtime.text.toString().isNotEmpty()) {
                                 val sstime = binding!!.customtime.text.toString()
                                 uploaddata(cname, cdetail, sname, saddress, sstime)
                             } else {
@@ -166,13 +165,13 @@ class AddIdActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                 val cname = "!@#$%"
                 val cdetail = "!@#$%"
                 if ((radioButton2.text.toString() == "Yes")) {
-                    if (!binding!!.shopname.text.toString()
-                            .isEmpty() && !binding!!.shopaddress.text.toString().isEmpty()
+                    if (binding!!.shopname.text.toString().isNotEmpty() && binding!!.shopaddress.text.toString()
+                            .isNotEmpty()
                     ) {
                         val sname = binding!!.shopname.text.toString()
                         val saddress = binding!!.shopaddress.text.toString()
                         if ((radioButton3.text.toString() == "Customize time")) {
-                            if (!binding!!.customtime.text.toString().isEmpty()) {
+                            if (binding!!.customtime.text.toString().isNotEmpty()) {
                                 val sstime = binding!!.customtime.text.toString()
                                 uploaddata(cname, cdetail, sname, saddress, sstime)
                             } else {
@@ -214,7 +213,7 @@ class AddIdActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListener 
                     val sname = "!@#$%"
                     val saddress = "!@#$%"
                     if ((radioButton3.text.toString() == "Customize time")) {
-                        if (!binding!!.customtime.text.toString().isEmpty()) {
+                        if (binding!!.customtime.text.toString().isNotEmpty()) {
                             val sstime = binding!!.customtime.text.toString()
                             uploaddata(cname, cdetail, sname, saddress, sstime)
                         } else {
@@ -251,7 +250,7 @@ class AddIdActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         val ucontact = binding!!.contactno.text.toString()
         val uwhatsapp = binding!!.whatsappno.text.toString()
         val uemail = binding!!.cmmail.text.toString()
-        if (!subtype.isEmpty() && !exptime.isEmpty() && !uname.isEmpty() && !ucontact.isEmpty()) {
+        if (subtype.isNotEmpty() && exptime.isNotEmpty() && uname.isNotEmpty() && ucontact.isNotEmpty()) {
             val tsLong = System.currentTimeMillis() / 1000
             val ts = tsLong.toString()
             val ImageFolder = FirebaseStorage.getInstance().reference.child("Nanded")

@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class AdapterViewPager(fragmentActivity: FragmentActivity, var arr: ArrayList<Fragment>) :
+class AdapterViewPager(fragmentActivity: FragmentActivity, private var arr: ArrayList<Fragment>) :
     FragmentStateAdapter(fragmentActivity) {
     public override fun createFragment(position: Int): Fragment {
         return arr.get(position)

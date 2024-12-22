@@ -19,7 +19,7 @@ class QueryAdapter(var context: Context?, var list: ArrayList<QueryClass?>) :
     RecyclerView.Adapter<QueryAdapter.ViewHolder>() {
     private fun getTime(time: String, timestamp: Long?): String {
         val calendar: Calendar = Calendar.getInstance(Locale.ENGLISH)
-        calendar.setTimeInMillis(time.toLong())
+        calendar.timeInMillis = time.toLong()
         val timee: String = SimpleDateFormat("dd-MM-yy").format(timestamp)
         return timee
     }
@@ -46,106 +46,96 @@ class QueryAdapter(var context: Context?, var list: ArrayList<QueryClass?>) :
         val whatsapp: String? = data?.whatsapp
         val contactime: String? = data?.contactime
 
-        holder.binding.type.setText(type)
-        holder.binding.subtype.setText(subtype)
+        holder.binding.type.text = type
+        holder.binding.subtype.text = subtype
         if (!disc!!.isEmpty()) {
-            holder.binding.disc.setVisibility(View.VISIBLE)
-            holder.binding.disc.setText(disc)
+            holder.binding.disc.visibility = View.VISIBLE
+            holder.binding.disc.text = disc
         } else {
-            holder.binding.disc.setVisibility(View.GONE)
+            holder.binding.disc.visibility = View.GONE
         }
         if ((type == "किरायाने देणे (Rent)")) {
-            holder.binding.monetyjust.setText("किराया :")
-            holder.binding.type.setVisibility(View.VISIBLE)
+            holder.binding.monetyjust.text = "किराया :"
+            holder.binding.type.visibility = View.VISIBLE
         } else if ((type == "किरायाने पाहिजे (Rent)")) {
-            holder.binding.monetyjust.setText("किराया :")
-            holder.binding.type.setVisibility(View.VISIBLE)
+            holder.binding.monetyjust.text = "किराया :"
+            holder.binding.type.visibility = View.VISIBLE
         } else if ((type == "विकत पाहिजे (Buy)")) {
-            holder.binding.monetyjust.setText("किंमत :")
-            holder.binding.type.setVisibility(View.VISIBLE)
+            holder.binding.monetyjust.text = "किंमत :"
+            holder.binding.type.visibility = View.VISIBLE
         } else if ((type == "विक्री आहे (Sell)")) {
-            holder.binding.monetyjust.setText("किंमत :")
-            holder.binding.type.setVisibility(View.VISIBLE)
+            holder.binding.monetyjust.text = "किंमत :"
+            holder.binding.type.visibility = View.VISIBLE
         } else if ((type == "नोकरी आहे (Job)")) {
-            holder.binding.monetyjust.setText("पगार :")
-            holder.binding.type.setVisibility(View.VISIBLE)
+            holder.binding.monetyjust.text = "पगार :"
+            holder.binding.type.visibility = View.VISIBLE
         } else if ((type == "नोकरी पाहिजे (Job)")) {
-            holder.binding.monetyjust.setText("पगार :")
-            holder.binding.type.setVisibility(View.VISIBLE)
+            holder.binding.monetyjust.text = "पगार :"
+            holder.binding.type.visibility = View.VISIBLE
         } else if ((type == "कामासाठी व्यक्ती पाहिजे (Need)")) {
-            holder.binding.type.setVisibility(View.VISIBLE)
-            holder.binding.monetyjust.setText("पगार :")
+            holder.binding.type.visibility = View.VISIBLE
+            holder.binding.monetyjust.text = "पगार :"
         } else if ((type == "वरील पैकी वेगळे (Other)")) {
-            holder.binding.monetyjust.setText("")
-            holder.binding.type.setVisibility(View.GONE)
+            holder.binding.monetyjust.text = ""
+            holder.binding.type.visibility = View.GONE
         }
-        if (!(image == "No")) {
-            holder.binding.openimage.setVisibility(View.VISIBLE)
-            holder.binding.imagecard.setVisibility(View.GONE)
+        if (image != "No") {
+            holder.binding.openimage.visibility = View.VISIBLE
+            holder.binding.imagecard.visibility = View.GONE
             Picasso.get().load(image).into(holder.binding.squeryimage)
         } else {
-            holder.binding.openimage.setVisibility(View.GONE)
-            holder.binding.imagecard.setVisibility(View.GONE)
+            holder.binding.openimage.visibility = View.GONE
+            holder.binding.imagecard.visibility = View.GONE
         }
-        holder.binding.openimage.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                holder.binding.imagecard.setVisibility(View.VISIBLE)
-            }
-        })
-        holder.binding.imagecard.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                holder.binding.imagecard.setVisibility(View.GONE)
-            }
-        })
-        if (!money!!.isEmpty()) {
-            holder.binding.moneyview.setVisibility(View.VISIBLE)
-            holder.binding.money.setText(money)
+        holder.binding.openimage.setOnClickListener { holder.binding.imagecard.visibility = View.VISIBLE }
+        holder.binding.imagecard.setOnClickListener {
+            holder.binding.imagecard.visibility = View.GONE
+        }
+        if (money!!.isNotEmpty()) {
+            holder.binding.moneyview.visibility = View.VISIBLE
+            holder.binding.money.text = money
         } else {
-            holder.binding.moneyview.setVisibility(View.GONE)
+            holder.binding.moneyview.visibility = View.GONE
         }
-        if (!uname!!.isEmpty()) {
-            holder.binding.unameview.setVisibility(View.VISIBLE)
-            holder.binding.uname.setText(uname)
+        if (uname!!.isNotEmpty()) {
+            holder.binding.unameview.visibility = View.VISIBLE
+            holder.binding.uname.text = uname
         } else {
-            holder.binding.unameview.setVisibility(View.GONE)
+            holder.binding.unameview.visibility = View.GONE
         }
-        if (!address!!.isEmpty()) {
-            holder.binding.addressview.setVisibility(View.VISIBLE)
-            holder.binding.address.setText(address)
+        if (address!!.isNotEmpty()) {
+            holder.binding.addressview.visibility = View.VISIBLE
+            holder.binding.address.text = address
         } else {
-            holder.binding.addressview.setVisibility(View.GONE)
+            holder.binding.addressview.visibility = View.GONE
         }
-        if (!contactime!!.isEmpty()) {
-            holder.binding.contactimeview.setVisibility(View.VISIBLE)
-            holder.binding.contactime.setText(contactime)
+        if (contactime!!.isNotEmpty()) {
+            holder.binding.contactimeview.visibility = View.VISIBLE
+            holder.binding.contactime.text = contactime
         } else {
-            holder.binding.contactimeview.setVisibility(View.GONE)
+            holder.binding.contactimeview.visibility = View.GONE
         }
-        if (!note!!.isEmpty()) {
-            holder.binding.noteview.setVisibility(View.VISIBLE)
-            holder.binding.note.setText(note)
+        if (note!!.isNotEmpty()) {
+            holder.binding.noteview.visibility = View.VISIBLE
+            holder.binding.note.text = note
         } else {
-            holder.binding.noteview.setVisibility(View.GONE)
+            holder.binding.noteview.visibility = View.GONE
         }
-        holder.binding.squerycontact.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                val intent: Intent = Intent(Intent.ACTION_DIAL)
-                intent.setData(Uri.parse("tel:" + number))
-                context!!.startActivity(intent)
-            }
-        })
+        holder.binding.squerycontact.setOnClickListener {
+            val intent: Intent = Intent(Intent.ACTION_DIAL)
+            intent.setData(Uri.parse("tel:$number"))
+            context!!.startActivity(intent)
+        }
         if (!whatsapp!!.isEmpty()) {
-            holder.binding.squerywhatsapp.setVisibility(View.VISIBLE)
-            holder.binding.squerywhatsapp.setOnClickListener(object : View.OnClickListener {
-                public override fun onClick(view: View) {
-                    val wn: String = "https://wa.me/+917028297606?text= Hi is anyone available?"
-                    val intent1: Intent = Intent(Intent.ACTION_VIEW)
-                    intent1.setData(Uri.parse("https://wa.me/+91" + whatsapp + "?text= Hi is anyone available?"))
-                    context!!.startActivity(intent1)
-                }
-            })
+            holder.binding.squerywhatsapp.visibility = View.VISIBLE
+            holder.binding.squerywhatsapp.setOnClickListener {
+                val wn: String = "https://wa.me/+917028297606?text= Hi is anyone available?"
+                val intent1: Intent = Intent(Intent.ACTION_VIEW)
+                intent1.setData(Uri.parse("https://wa.me/+91$whatsapp?text= Hi is anyone available?"))
+                context!!.startActivity(intent1)
+            }
         } else {
-            holder.binding.squerywhatsapp.setVisibility(View.GONE)
+            holder.binding.squerywhatsapp.visibility = View.GONE
         }
     }
 

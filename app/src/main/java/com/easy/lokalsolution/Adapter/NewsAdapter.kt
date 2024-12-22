@@ -115,117 +115,76 @@ class NewsAdapter(var list: ArrayList<NewsClass?>, var context: Context?) :
             holder.binding.likeview.visibility = View.VISIBLE
             val ulc = holder.binding.unlikecount.text.toString().toInt()
             holder.binding.likecount.text = (ulc - 1).toString() + ""
-            FirebaseFirestore.getInstance().collection("Like").document((id)!!)
+            FirebaseFirestore.getInstance().collection("Like").document((id))
                 .collection("Like").document((FirebaseAuth.getInstance().uid)!!).delete()
                 .addOnSuccessListener {
                     Toast.makeText(context, "Like Removed", Toast.LENGTH_SHORT).show()
                 }
         }
-        holder.binding.likeview.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                holder.binding.unlikeview.visibility = View.VISIBLE
-                holder.binding.likeview.visibility = View.GONE
-                val ulc = holder.binding.likecount.text.toString().toInt()
-                holder.binding.unlikecount.text = (ulc + 1).toString() + ""
-                val commentClass = LikeClass(FirebaseAuth.getInstance().uid, Date().time)
-                FirebaseFirestore.getInstance().collection("Like").document((id)!!)
-                    .collection("Like").document((FirebaseAuth.getInstance().uid)!!)
-                    .set(commentClass).addOnSuccessListener(
-                        OnSuccessListener {
-                            Toast.makeText(
-                                context,
-                                "Like Added",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        })
+        holder.binding.likeview.setOnClickListener {
+            holder.binding.unlikeview.visibility = View.VISIBLE
+            holder.binding.likeview.visibility = View.GONE
+            val ulc = holder.binding.likecount.text.toString().toInt()
+            holder.binding.unlikecount.text = (ulc + 1).toString() + ""
+            val commentClass = LikeClass(FirebaseAuth.getInstance().uid, Date().time)
+            FirebaseFirestore.getInstance().collection("Like").document((id)!!)
+                .collection("Like").document((FirebaseAuth.getInstance().uid)!!)
+                .set(commentClass).addOnSuccessListener(
+                    OnSuccessListener {
+                        Toast.makeText(
+                            context,
+                            "Like Added",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
+        }
+        holder.binding.commentview.setOnClickListener { // Toast.makeText(context, "comment", Toast.LENGTH_SHORT).show();
+            val intent = Intent(context, CommnetActivity::class.java)
+            intent.putExtra("id", id)
+            context!!.startActivity(intent)
+        }
+        holder.binding.shareview.setOnClickListener { // Toast.makeText(context, "share", Toast.LENGTH_SHORT).show();
+            val bitmap = (holder.binding.newsimage.drawable as BitmapDrawable).bitmap
+            val shareIntent = Intent()
+            shareIntent.setAction(Intent.ACTION_SEND)
+            shareIntent.setType("image/png")
+            val bytes = ByteArrayOutputStream()
+            // .compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+            val path = MediaStore.Images.Media.insertImage(
+                context!!.contentResolver,
+                bitmap,
+                "Title",
+                null
+            )
+            // Uri uri = Uri.parse("android.resource://your package
+            //name/"+R.drawable.ic_launcher);
+            val uri = Uri.parse(path)
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "")
+            context!!.startActivity(Intent.createChooser(shareIntent, "Share image"))
+        }
+        holder.binding.saveview.setOnClickListener {
+            val draw = holder.binding.newsimage.drawable as BitmapDrawable
+            val bitmap = draw.bitmap
+            var outStream: FileOutputStream? = null
+            val sdCard = Environment.getExternalStorageDirectory()
+            val dir = File(sdCard.absolutePath + "/Download")
+            dir.mkdirs()
+            val fileName = String.format("%d.jpg", System.currentTimeMillis())
+            val outFile = File(dir, fileName)
+            Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show()
+            try {
+                outStream = FileOutputStream(outFile)
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+                outStream.flush()
+                outStream.close()
+                val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+                intent.setData(Uri.fromFile(outFile))
+                context!!.sendBroadcast(intent)
+            } catch (e: IOException) {
+                throw RuntimeException(e)
             }
-        })
-        holder.binding.commentview.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                // Toast.makeText(context, "comment", Toast.LENGTH_SHORT).show();
-                val intent = Intent(context, CommnetActivity::class.java)
-                intent.putExtra("id", id)
-                context!!.startActivity(intent)
-            }
-        })
-        holder.binding.shareview.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                // Toast.makeText(context, "share", Toast.LENGTH_SHORT).show();
-                val bitmap = (holder.binding.newsimage.drawable as BitmapDrawable).bitmap
-                val shareIntent = Intent()
-                shareIntent.setAction(Intent.ACTION_SEND)
-                shareIntent.setType("image/png")
-                val bytes = ByteArrayOutputStream()
-                // .compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                val path = MediaStore.Images.Media.insertImage(
-                    context!!.contentResolver,
-                    bitmap,
-                    "Title",
-                    null
-                )
-                // Uri uri = Uri.parse("android.resource://your package
-                //name/"+R.drawable.ic_launcher);
-                val uri = Uri.parse(path)
-                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "")
-                context!!.startActivity(Intent.createChooser(shareIntent, "Share image"))
-            }
-        })
-        holder.binding.saveview.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-
-
-                /* BitmapDrawable bitmapDrawable = (BitmapDrawable) holder.binding.newsimage.getDrawable();
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-                FileOutputStream outputStream = null;
-                File file = Environment.getExternalStorageDirectory();
-                File gimage = new File(file.getAbsolutePath() + "/Lokal Solution Downloads");
-                gimage.mkdir();
-                String filename = String.format("%d.jpg", System.currentTimeMillis());
-                File outfile = new File(gimage, filename);
-
-                try {
-                    outputStream = new FileOutputStream(outfile);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                    try {
-                        outputStream.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        outputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    intent.setData(Uri.fromFile(outfile));
-                    Toast.makeText(context, "Image Downloaded", Toast.LENGTH_SHORT).show();
-                    context.sendBroadcast(intent);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }*/
-                val draw = holder.binding.newsimage.drawable as BitmapDrawable
-                val bitmap = draw.bitmap
-                var outStream: FileOutputStream? = null
-                val sdCard = Environment.getExternalStorageDirectory()
-                val dir = File(sdCard.absolutePath + "/Download")
-                dir.mkdirs()
-                val fileName = String.format("%d.jpg", System.currentTimeMillis())
-                val outFile = File(dir, fileName)
-                Toast.makeText(context, "Image Saved", Toast.LENGTH_SHORT).show()
-                try {
-                    outStream = FileOutputStream(outFile)
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
-                    outStream.flush()
-                    outStream.close()
-                    val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-                    intent.setData(Uri.fromFile(outFile))
-                    context!!.sendBroadcast(intent)
-                } catch (e: IOException) {
-                    throw RuntimeException(e)
-                }
-            }
-        })
+        }
     }
 
     override fun getItemCount(): Int {

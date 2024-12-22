@@ -14,15 +14,11 @@ import com.easy.lokalsolution.Class.OwnNewsClass
 import com.easy.lokalsolution.R
 import com.easy.lokalsolution.databinding.ActivityEditNewsBinding
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import com.squareup.picasso.Picasso
 import java.util.Date
 
@@ -47,8 +43,8 @@ class EditNewsActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListen
     var image: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityEditNewsBinding.inflate(getLayoutInflater())
-        setContentView(binding!!.getRoot())
+        binding = ActivityEditNewsBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
         dialog = ProgressDialog(this)
         dialog!!.setMessage("Please wait, Editing post .....")
         dialog!!.setCancelable(false)
@@ -58,32 +54,30 @@ class EditNewsActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListen
             android.R.layout.simple_spinner_item
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding!!.newtype.setAdapter(adapter)
-        binding!!.newtype.setOnItemSelectedListener(this@EditNewsActivity)
-        id = getIntent().getStringExtra("id")
+        binding!!.newtype.adapter = adapter
+        binding!!.newtype.onItemSelectedListener = this@EditNewsActivity
+        id = intent.getStringExtra("id")
         FirebaseFirestore.getInstance().collection("Nanded").document("NandedCity")
             .collection("News").document((id)!!).get()
-            .addOnSuccessListener(object : OnSuccessListener<DocumentSnapshot> {
-                public override fun onSuccess(documentSnapshot: DocumentSnapshot) {
-                    val data: NewsClass? = documentSnapshot.toObject(NewsClass::class.java)
-                    val type: String? = data?.type
-                    val title: String? = data?.title
-                    val disc: String? = data?.disc
-                    val image: String? = data?.image
+            .addOnSuccessListener { documentSnapshot ->
+                val data: NewsClass? = documentSnapshot.toObject(NewsClass::class.java)
+                val type: String? = data?.type
+                val title: String? = data?.title
+                val disc: String? = data?.disc
+                val image: String? = data?.image
 
-                    binding!!.typetext.setText(type)
-                    binding!!.newtitle.setText(title)
-                    binding!!.newdis.setText(disc)
-                    if (!(image == "No")) {
-                        binding!!.imagee.setVisibility(View.VISIBLE)
-                        Picasso.get().load(image).placeholder(R.drawable.images)
-                            .into(binding!!.imagee)
-                    } else {
-                        binding!!.imagee.setVisibility(View.GONE)
-                    }
+                binding!!.typetext.text = type
+                binding!!.newtitle.setText(title)
+                binding!!.newdis.setText(disc)
+                if (image != "No") {
+                    binding!!.imagee.visibility = View.VISIBLE
+                    Picasso.get().load(image).placeholder(R.drawable.images)
+                        .into(binding!!.imagee)
+                } else {
+                    binding!!.imagee.visibility = View.GONE
                 }
-            })
-        binding!!.newtype.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            }
+        binding!!.newtype.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             public override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
@@ -92,182 +86,155 @@ class EditNewsActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListen
             ) {
                 val item: Any = parent.getItemAtPosition(position)
                 if ((item.toString() == "News")) {
-                    binding!!.typetext.setVisibility(View.GONE)
-                    binding!!.typetext.setText("News")
+                    binding!!.typetext.visibility = View.GONE
+                    binding!!.typetext.text = "News"
                 } else if ((item.toString() == "Advertisement")) {
-                    binding!!.typetext.setVisibility(View.GONE)
-                    binding!!.typetext.setText("Advertisement")
+                    binding!!.typetext.visibility = View.GONE
+                    binding!!.typetext.text = "Advertisement"
                 } else if ((item.toString() == "Story")) {
-                    binding!!.typetext.setVisibility(View.GONE)
-                    binding!!.typetext.setText("Story")
+                    binding!!.typetext.visibility = View.GONE
+                    binding!!.typetext.text = "Story"
                 } else if ((item.toString() == "Poetry")) {
-                    binding!!.typetext.setVisibility(View.GONE)
-                    binding!!.typetext.setText("Poetry")
+                    binding!!.typetext.visibility = View.GONE
+                    binding!!.typetext.text = "Poetry"
                 } else if ((item.toString() == "Announcement")) {
-                    binding!!.typetext.setVisibility(View.GONE)
-                    binding!!.typetext.setText("Announcement")
+                    binding!!.typetext.visibility = View.GONE
+                    binding!!.typetext.text = "Announcement"
                 } else if ((item.toString() == "Puzzle")) {
-                    binding!!.typetext.setVisibility(View.GONE)
-                    binding!!.typetext.setText("Puzzle")
+                    binding!!.typetext.visibility = View.GONE
+                    binding!!.typetext.text = "Puzzle"
                 } else if ((item.toString() == "GK Question")) {
-                    binding!!.typetext.setVisibility(View.GONE)
-                    binding!!.typetext.setText("GK Question")
+                    binding!!.typetext.visibility = View.GONE
+                    binding!!.typetext.text = "GK Question"
                 } else if ((item.toString() == "Other")) {
-                    binding!!.typetext.setVisibility(View.GONE)
-                    binding!!.typetext.setText("Other")
+                    binding!!.typetext.visibility = View.GONE
+                    binding!!.typetext.text = "Other"
                 } else if ((item.toString() == "")) {
-                    binding!!.typetext.setVisibility(View.VISIBLE)
+                    binding!!.typetext.visibility = View.VISIBLE
                 }
             }
 
             public override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
-        binding!!.back.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                finish()
-            }
-        })
-        binding!!.uploadimage.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                ImagePicker.with(this@EditNewsActivity)
-                    .crop() //Crop image(Optional), Check Customization for more option
-                    .compress(1024) //Final image size will be less than 1 MB(Optional)
-                    .maxResultSize(
-                        1080,
-                        1080
-                    ) //Final image resolution will be less than 1080 x 1080(Optional)
-                    .start(11)
-            }
-        })
-        binding!!.uploadnewbtn.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
+        }
+        binding!!.back.setOnClickListener { finish() }
+        binding!!.uploadimage.setOnClickListener {
+            ImagePicker.with(this@EditNewsActivity)
+                .crop() //Crop image(Optional), Check Customization for more option
+                .compress(1024) //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(
+                    1080,
+                    1080
+                ) //Final image resolution will be less than 1080 x 1080(Optional)
+                .start(11)
+        }
+        binding!!.uploadnewbtn.setOnClickListener {
+            dialog!!.show()
+            val title: String = binding!!.newtitle.text.toString()
+            val disc: String = binding!!.newdis.text.toString()
+            if (title.isNotEmpty() && disc.isNotEmpty()) {
                 dialog!!.show()
-                val title: String = binding!!.newtitle.getText().toString()
-                val disc: String = binding!!.newdis.getText().toString()
-                if (!title.isEmpty() && !disc.isEmpty()) {
-                    dialog!!.show()
-                    val userid: String? = FirebaseAuth.getInstance().getUid()
-                    val tsLong: Long = System.currentTimeMillis() / 1000
-                    val ts: String = tsLong.toString()
-                    val ImageFolder: StorageReference =
-                        FirebaseStorage.getInstance().getReference().child("Nanded")
-                            .child((FirebaseAuth.getInstance().getUid())!!).child("News").child(ts)
-                    val newsCollectionRef: CollectionReference =
-                        FirebaseFirestore.getInstance().collection("Nanded")
-                            .document("NandedCity").collection("News")
-                    val ownCollectionRef: CollectionReference =
-                        FirebaseFirestore.getInstance().collection("OwnData")
-                            .document((userid)!!).collection("News")
-                    if (image11 != null) {
-                        ImageFolder.putFile(image11!!)
-                            .addOnSuccessListener(object :
-                                OnSuccessListener<UploadTask.TaskSnapshot?> {
-                                public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot?) {
-                                    ImageFolder.getDownloadUrl()
-                                        .addOnSuccessListener(object : OnSuccessListener<Uri> {
-                                            public override fun onSuccess(uri: Uri) {
-                                                val image11: String = uri.toString()
-                                                val type: String =
-                                                    binding!!.typetext.getText().toString()
-                                                val date: Date = Date()
-                                                val cmidClass: NewsClass = NewsClass(
-                                                    type,
-                                                    title,
-                                                    disc,
-                                                    userid,
-                                                    id,
-                                                    image11,
-                                                    date.getTime()
-                                                )
-                                                val cmidClass1: OwnNewsClass =
-                                                    OwnNewsClass(id, date.getTime())
-                                                newsCollectionRef.document((id)!!).set(cmidClass)
-                                                    .addOnSuccessListener(object :
-                                                        OnSuccessListener<Void?> {
-                                                        public override fun onSuccess(unused: Void?) {
-                                                            ownCollectionRef.document((id)!!)
-                                                                .set(cmidClass1)
-                                                                .addOnSuccessListener(object :
-                                                                    OnSuccessListener<Void?> {
-                                                                    public override fun onSuccess(
-                                                                        unused: Void?
-                                                                    ) {
-                                                                        finish()
-                                                                        dialog!!.dismiss()
-                                                                        Toast.makeText(
-                                                                            this@EditNewsActivity,
-                                                                            "News Uploaded Successfully",
-                                                                            Toast.LENGTH_SHORT
-                                                                        ).show()
-                                                                    }
-                                                                })
-                                                        }
-                                                    })
-                                            }
-                                        })
+                val userid: String? = FirebaseAuth.getInstance().uid
+                val tsLong: Long = System.currentTimeMillis() / 1000
+                val ts: String = tsLong.toString()
+                val ImageFolder: StorageReference =
+                    FirebaseStorage.getInstance().reference.child("Nanded")
+                        .child((FirebaseAuth.getInstance().uid)!!).child("News").child(ts)
+                val newsCollectionRef: CollectionReference =
+                    FirebaseFirestore.getInstance().collection("Nanded")
+                        .document("NandedCity").collection("News")
+                val ownCollectionRef: CollectionReference =
+                    FirebaseFirestore.getInstance().collection("OwnData")
+                        .document((userid)!!).collection("News")
+                if (image11 != null) {
+                    ImageFolder.putFile(image11!!)
+                        .addOnSuccessListener {
+                            ImageFolder.downloadUrl
+                                .addOnSuccessListener { uri ->
+                                    val image11: String = uri.toString()
+                                    val type: String = binding!!.typetext.text.toString()
+                                    val date: Date = Date()
+                                    val cmidClass: NewsClass = NewsClass(
+                                        type,
+                                        title,
+                                        disc,
+                                        userid,
+                                        id,
+                                        image11,
+                                        date.time
+                                    )
+                                    val cmidClass1: OwnNewsClass =
+                                        OwnNewsClass(id, date.time)
+                                    newsCollectionRef.document((id)!!).set(cmidClass)
+                                        .addOnSuccessListener {
+                                            ownCollectionRef.document((id)!!)
+                                                .set(cmidClass1)
+                                                .addOnSuccessListener {
+                                                    finish()
+                                                    dialog!!.dismiss()
+                                                    Toast.makeText(
+                                                        this@EditNewsActivity,
+                                                        "News Uploaded Successfully",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                        }
                                 }
-                            }).addOnFailureListener(object : OnFailureListener {
-                                public override fun onFailure(e: Exception) {
+                        }.addOnFailureListener {
+                            Toast.makeText(
+                                this@EditNewsActivity,
+                                "fail",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            dialog!!.dismiss()
+                        }
+                } else if (image11 == null) {
+                    val type: String = binding!!.typetext.text.toString()
+                    val date: Date = Date()
+                    val cmidClass: NewsClass =
+                        NewsClass(type, title, disc, userid, id, image, date.time)
+                    val cmidClass1: OwnNewsClass = OwnNewsClass(id, date.time)
+                    newsCollectionRef.document((id)!!).set(cmidClass)
+                        .addOnSuccessListener {
+                            ownCollectionRef.document((id)!!).set(cmidClass1)
+                                .addOnSuccessListener {
+                                    dialog!!.dismiss()
+                                    finish()
                                     Toast.makeText(
                                         this@EditNewsActivity,
-                                        "fail",
+                                        "Data Uploaded Successfully",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    dialog!!.dismiss()
                                 }
-                            })
-                    } else if (image11 == null) {
-                        val type: String = binding!!.typetext.getText().toString()
-                        val date: Date = Date()
-                        val cmidClass: NewsClass =
-                            NewsClass(type, title, disc, userid, id, image, date.getTime())
-                        val cmidClass1: OwnNewsClass = OwnNewsClass(id, date.getTime())
-                        newsCollectionRef.document((id)!!).set(cmidClass)
-                            .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                                public override fun onSuccess(unused: Void?) {
-                                    ownCollectionRef.document((id)!!).set(cmidClass1)
-                                        .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                                            public override fun onSuccess(unused: Void?) {
-                                                dialog!!.dismiss()
-                                                finish()
-                                                Toast.makeText(
-                                                    this@EditNewsActivity,
-                                                    "Data Uploaded Successfully",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        })
-                                }
-                            })
-                    } else {
-                        dialog!!.dismiss()
-                        Toast.makeText(this@EditNewsActivity, "Something Wrong", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                        }
                 } else {
-                    if (title.isEmpty()) {
-                        dialog!!.dismiss()
-                        binding!!.newtitle.setError("Please enter news title")
-                        Toast.makeText(
-                            this@EditNewsActivity,
-                            "Please enter news title",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    if (disc.isEmpty()) {
-                        dialog!!.dismiss()
-                        binding!!.newdis.setError("Please enter new description")
-                        Toast.makeText(
-                            this@EditNewsActivity,
-                            "Please enter new description",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                    dialog!!.dismiss()
+                    Toast.makeText(this@EditNewsActivity, "Something Wrong", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } else {
+                if (title.isEmpty()) {
+                    dialog!!.dismiss()
+                    binding!!.newtitle.error = "Please enter news title"
+                    Toast.makeText(
+                        this@EditNewsActivity,
+                        "Please enter news title",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (disc.isEmpty()) {
+                    dialog!!.dismiss()
+                    binding!!.newdis.error = "Please enter new description"
+                    Toast.makeText(
+                        this@EditNewsActivity,
+                        "Please enter new description",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-        })
+        }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 11) {
@@ -280,7 +247,5 @@ class EditNewsActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListen
     public override fun onItemSelected(adapterView: AdapterView<*>?, view: View, i: Int, l: Long) {}
     public override fun onNothingSelected(adapterView: AdapterView<*>?) {}
 
-    companion object {
-        private val PICK_IMAGE: Int = 1
-    }
+
 }

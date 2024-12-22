@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.easy.lokalsolution.Class.UserClass
@@ -14,11 +13,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
@@ -43,8 +39,8 @@ import com.google.firebase.storage.FirebaseStorage
     var database: FirebaseDatabase? = null
      override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivitySigninBinding.inflate(getLayoutInflater())
-        setContentView(binding!!.getRoot())
+        binding = ActivitySigninBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
         auth = FirebaseAuth.getInstance()
         mAuth = FirebaseAuth.getInstance()
         storage = FirebaseStorage.getInstance()
@@ -69,15 +65,14 @@ import com.google.firebase.storage.FirebaseStorage
 
         // Initialize sign in client
          var googleSignInClient = GoogleSignIn.getClient(this@SigninActivity, googleSignInOptions)
-         binding!!.googlesigninbutton.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                progressDialog2!!.show()
-                val signInIntent: Intent = googleSignInClient!!.getSignInIntent()
-                startActivityForResult(signInIntent, 123)
-            }
-        })
-    }
+         binding!!.googlesigninbutton.setOnClickListener {
+             progressDialog2!!.show()
+             val signInIntent: Intent = googleSignInClient.signInIntent
+             startActivityForResult(signInIntent, 123)
+         }
+     }
 
+    @Deprecated("Deprecated in Java")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 123) {
@@ -98,63 +93,57 @@ import com.google.firebase.storage.FirebaseStorage
     private fun firebaseAuthWithGoogle(idToken: String?) {
         val credential: AuthCredential = GoogleAuthProvider.getCredential(idToken, null)
         auth!!.signInWithCredential(credential)
-            .addOnCompleteListener(this, object : OnCompleteListener<AuthResult?> {
-                public override fun onComplete(task: Task<AuthResult?>) {
-                    if (task.isSuccessful()) {
-                        Log.d("TAG", "signInWithCredential:success")
-                        val user: FirebaseUser? = auth!!.getCurrentUser()
-                        val acct: GoogleSignInAccount? =
-                            GoogleSignIn.getLastSignedInAccount(this@SigninActivity)
-                        if (acct != null) {
-                            personName = user!!.getDisplayName()
-                            personEmail = user.getEmail()
-                            personalNumber = user.getPhoneNumber()
-                            personPhoto = acct.getPhotoUrl()
-                            FirebaseMessaging.getInstance().getToken()
-                                .addOnCompleteListener(object : OnCompleteListener<String?> {
-                                    public override fun onComplete(task: Task<String?>) {
-                                        val tokenn: String? = task.getResult()
-                                        val userClass: UserClass = UserClass(
-                                            image1,
-                                            "",
-                                            personEmail,
-                                            "",
-                                            tokenn,
-                                            FirebaseAuth.getInstance().getUid(),
-                                            "Nanded"
+            .addOnCompleteListener(this
+            ) { task ->
+                if (task.isSuccessful) {
+                    Log.d("TAG", "signInWithCredential:success")
+                    val user: FirebaseUser? = auth!!.currentUser
+                    val acct: GoogleSignInAccount? =
+                        GoogleSignIn.getLastSignedInAccount(this@SigninActivity)
+                    if (acct != null) {
+                        personName = user!!.displayName
+                        personEmail = user.email
+                        personalNumber = user.phoneNumber
+                        personPhoto = acct.photoUrl
+                        FirebaseMessaging.getInstance().token
+                            .addOnCompleteListener { task ->
+                                val tokenn: String? = task.result
+                                val userClass: UserClass = UserClass(
+                                    image1,
+                                    "",
+                                    personEmail,
+                                    "",
+                                    tokenn,
+                                    FirebaseAuth.getInstance().uid,
+                                    "Nanded"
+                                )
+                                FirebaseFirestore.getInstance().collection("AllUserG")
+                                    .document((FirebaseAuth.getInstance().uid)!!)
+                                    .set(userClass).addOnSuccessListener {
+                                        progressDialog!!.dismiss()
+                                        Toast.makeText(
+                                            this@SigninActivity,
+                                            "Your Account Is Created",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        Toast.makeText(
+                                            this@SigninActivity,
+                                            "Welcome To Lokal Solution",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        val intent: Intent = Intent(
+                                            this@SigninActivity,
+                                            GetOtherDetailsActivity::class.java
                                         )
-                                        FirebaseFirestore.getInstance().collection("AllUserG")
-                                            .document((FirebaseAuth.getInstance().getUid())!!)
-                                            .set(userClass).addOnSuccessListener(object :
-                                                OnSuccessListener<Void?> {
-                                                public override fun onSuccess(unused: Void?) {
-                                                    progressDialog!!.dismiss()
-                                                    Toast.makeText(
-                                                        this@SigninActivity,
-                                                        "Your Account Is Created",
-                                                        Toast.LENGTH_LONG
-                                                    ).show()
-                                                    Toast.makeText(
-                                                        this@SigninActivity,
-                                                        "Welcome To Lokal Solution",
-                                                        Toast.LENGTH_LONG
-                                                    ).show()
-                                                    val intent: Intent = Intent(
-                                                        this@SigninActivity,
-                                                        GetOtherDetailsActivity::class.java
-                                                    )
-                                                    startActivity(intent)
-                                                    finishAffinity()
-                                                }
-                                            })
+                                        startActivity(intent)
+                                        finishAffinity()
                                     }
-                                })
-                        }
-                    } else {
-                        progressDialog!!.dismiss()
-                        Log.w("TAG", "signInWithCredential:failure", task.getException())
+                            }
                     }
+                } else {
+                    progressDialog!!.dismiss()
+                    Log.w("TAG", "signInWithCredential:failure", task.exception)
                 }
-            })
+            }
     }
 }

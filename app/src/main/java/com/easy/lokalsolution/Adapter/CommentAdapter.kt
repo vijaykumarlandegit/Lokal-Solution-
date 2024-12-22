@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.easy.lokalsolution.Class.CommentClass
 import com.easy.lokalsolution.R
 import com.easy.lokalsolution.databinding.CommentsampleBinding
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
@@ -20,7 +18,7 @@ class CommentAdapter(var context: Context, var list: ArrayList<CommentClass?>?) 
     RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
     private fun getTime(time: String, timestamp: Long?): String {
         val calendar: Calendar = Calendar.getInstance(Locale.ENGLISH)
-        calendar.setTimeInMillis(time.toLong())
+        calendar.timeInMillis = time.toLong()
         val timee: String = SimpleDateFormat("dd-MM-yy hh:mm aa").format(timestamp)
         return timee
     }
@@ -37,17 +35,15 @@ class CommentAdapter(var context: Context, var list: ArrayList<CommentClass?>?) 
         val time: Long? = data?.time
 
         val tt: String = time.toString()
-        holder.binding.commTime.setText(getTime(tt, time))
-        holder.binding.commComment.setText(comment)
+        holder.binding.commTime.text = getTime(tt, time)
+        holder.binding.commComment.text = comment
         FirebaseFirestore.getInstance().collection("AllUserG").document((userid)!!)
-            .get().addOnSuccessListener(object : OnSuccessListener<DocumentSnapshot> {
-                public override fun onSuccess(documentSnapshot: DocumentSnapshot) {
-                    val name: String? = documentSnapshot.getString("name")
-                    val pic: String? = documentSnapshot.getString("image")
-                    holder.binding.commUN.setText("@" + name)
-                    Picasso.get().load(pic).into(holder.binding.commUP)
-                }
-            })
+            .get().addOnSuccessListener { documentSnapshot ->
+                val name: String? = documentSnapshot.getString("name")
+                val pic: String? = documentSnapshot.getString("image")
+                holder.binding.commUN.text = "@" + name
+                Picasso.get().load(pic).into(holder.binding.commUP)
+            }
     }
 
     public override fun getItemCount(): Int {

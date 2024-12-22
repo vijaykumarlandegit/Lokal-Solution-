@@ -19,7 +19,7 @@ class SplashScreenActivity() : AppCompatActivity() {
                 } catch (e: InterruptedException) {
                     e.printStackTrace()
                 } finally {
-                    if (auth!!.getCurrentUser() != null) {
+                    if (auth!!.currentUser != null) {
                         val intent1: Intent =
                             Intent(this@SplashScreenActivity, MainActivity::class.java)
                         startActivity(intent1)

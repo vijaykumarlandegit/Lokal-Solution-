@@ -15,38 +15,36 @@ import com.easy.lokalsolution.Class.QueryClass
 import com.easy.lokalsolution.R
 import com.easy.lokalsolution.databinding.ActivityAddQueryBinding
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import java.util.Date
- class AddQueryActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+
+class AddQueryActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     var binding: ActivityAddQueryBinding? = null
     var dialog: ProgressDialog? = null
     var image11: Uri? = null
     lateinit var querytype: Array<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAddQueryBinding.inflate(getLayoutInflater())
-        setContentView(binding!!.getRoot())
+        binding = ActivityAddQueryBinding.inflate(layoutInflater)
+        setContentView(binding!!.root)
         val adapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
             this,
             R.array.QueryType,
             android.R.layout.simple_spinner_item
         )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding!!.querytype.setAdapter(adapter)
-        binding!!.querytype.setOnItemSelectedListener(this@AddQueryActivity)
+        binding!!.querytype.adapter = adapter
+        binding!!.querytype.onItemSelectedListener = this@AddQueryActivity
         dialog = ProgressDialog(this)
         dialog!!.setMessage("Please wait, Uploading query .....")
         dialog!!.setCancelable(false)
         val tsLong: Long = System.currentTimeMillis() / 1000
         val ts: String = tsLong.toString()
-        binding!!.querytype.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        binding!!.querytype.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             public override fun onItemSelected(
                 adapterView: AdapterView<*>,
                 view: View,
@@ -105,177 +103,152 @@ import java.util.Date
             }
 
             public override fun onNothingSelected(adapterView: AdapterView<*>?) {}
-        })
-        binding!!.uploadimage.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                ImagePicker.with(this@AddQueryActivity)
-                    .crop() //Crop image(Optional), Check Customization for more option
-                    .compress(1024) //Final image size will be less than 1 MB(Optional)
-                    .maxResultSize(
-                        1080,
-                        1080
-                    ) //Final image resolution will be less than 1080 x 1080(Optional)
-                    .start(11)
-            }
-        })
-        binding!!.back.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                finish()
-            }
-        })
-        binding!!.submitqerybtn.setOnClickListener(object : View.OnClickListener {
-            public override fun onClick(view: View) {
-                dialog!!.show()
-                val disc: String = binding!!.disc.getText().toString()
-                val contact: String = binding!!.querycontact.getText().toString()
-                val whatsapp: String = binding!!.querywhatapp.getText().toString()
-                val cotactime: String = binding!!.contactime.getText().toString()
-                val subtype: String = binding!!.subtype.getText().toString()
-                val money: String = binding!!.moneyedittext.getText().toString()
-                val address: String = binding!!.addressedittext.getText().toString()
-                val note: String = binding!!.note.getText().toString()
-                val uname: String = binding!!.uname.getText().toString()
-                val selectedtype: String = binding!!.querytype.getSelectedItem().toString()
-                if (!subtype.isEmpty() && !contact.isEmpty()) {
-                    val userid: String? = FirebaseAuth.getInstance().getUid()
-                    val ImageFolder: StorageReference =
-                        FirebaseStorage.getInstance().getReference().child("Nanded")
-                            .child((FirebaseAuth.getInstance().getUid())!!).child("Query").child(ts)
-                    val queryCollectionRef: CollectionReference =
-                        FirebaseFirestore.getInstance().collection("Nanded")
-                            .document("NandedCity").collection("Query")
-                    val ownCollectionRef: CollectionReference =
-                        FirebaseFirestore.getInstance().collection("OwnData")
-                            .document((userid)!!).collection("Query")
-                    val id: String = queryCollectionRef.document().getId()
-                    if (image11 != null) {
-                        ImageFolder.putFile(image11!!)
-                            .addOnSuccessListener(object :
-                                OnSuccessListener<UploadTask.TaskSnapshot?> {
-                                public override fun onSuccess(taskSnapshot: UploadTask.TaskSnapshot?) {
-                                    ImageFolder.getDownloadUrl()
-                                        .addOnSuccessListener(object : OnSuccessListener<Uri> {
-                                            public override fun onSuccess(uri: Uri) {
-                                                val uri1: String = uri.toString()
-                                                val cmidClass: QueryClass = QueryClass(
-                                                    selectedtype,
-                                                    subtype,
-                                                    money,
-                                                    address,
-                                                    disc,
-                                                    note,
-                                                    uname,
-                                                    contact,
-                                                    whatsapp,
-                                                    cotactime,
-                                                    uri1,
-                                                    userid,
-                                                    Date().getTime()
-                                                )
-                                                queryCollectionRef.document(id).set(cmidClass)
-                                                    .addOnSuccessListener(object :
-                                                        OnSuccessListener<Void?> {
-                                                        public override fun onSuccess(unused: Void?) {
-                                                            val ownQueryClass: OwnQueryClass =
-                                                                OwnQueryClass(id, Date().getTime())
-                                                            ownCollectionRef.document(id)
-                                                                .set(ownQueryClass)
-                                                                .addOnSuccessListener(object :
-                                                                    OnSuccessListener<Void?> {
-                                                                    public override fun onSuccess(
-                                                                        unused: Void?
-                                                                    ) {
-                                                                        dialog!!.dismiss()
-                                                                        finish()
-                                                                        Toast.makeText(
-                                                                            this@AddQueryActivity,
-                                                                            "Query Uploaded Successfully",
-                                                                            Toast.LENGTH_SHORT
-                                                                        ).show()
-                                                                    }
-                                                                })
-                                                        }
-                                                    })
-                                            }
-                                        })
+        }
+        binding!!.uploadimage.setOnClickListener {
+            ImagePicker.with(this@AddQueryActivity)
+                .crop() //Crop image(Optional), Check Customization for more option
+                .compress(1024) //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(
+                    1080,
+                    1080
+                ) //Final image resolution will be less than 1080 x 1080(Optional)
+                .start(11)
+        }
+        binding!!.back.setOnClickListener { finish() }
+        binding!!.submitqerybtn.setOnClickListener {
+            dialog!!.show()
+            val disc: String = binding!!.disc.text.toString()
+            val contact: String = binding!!.querycontact.text.toString()
+            val whatsapp: String = binding!!.querywhatapp.text.toString()
+            val cotactime: String = binding!!.contactime.text.toString()
+            val subtype: String = binding!!.subtype.text.toString()
+            val money: String = binding!!.moneyedittext.text.toString()
+            val address: String = binding!!.addressedittext.text.toString()
+            val note: String = binding!!.note.text.toString()
+            val uname: String = binding!!.uname.text.toString()
+            val selectedtype: String = binding!!.querytype.selectedItem.toString()
+            if (subtype.isNotEmpty() && contact.isNotEmpty()) {
+                val userid: String? = FirebaseAuth.getInstance().uid
+                val ImageFolder: StorageReference =
+                    FirebaseStorage.getInstance().reference.child("Nanded")
+                        .child((FirebaseAuth.getInstance().getUid())!!).child("Query").child(ts)
+                val queryCollectionRef: CollectionReference =
+                    FirebaseFirestore.getInstance().collection("Nanded")
+                        .document("NandedCity").collection("Query")
+                val ownCollectionRef: CollectionReference =
+                    FirebaseFirestore.getInstance().collection("OwnData")
+                        .document((userid)!!).collection("Query")
+                val id: String = queryCollectionRef.document().id
+                if (image11 != null) {
+                    ImageFolder.putFile(image11!!)
+                        .addOnSuccessListener {
+                            ImageFolder.downloadUrl
+                                .addOnSuccessListener { uri ->
+                                    val uri1: String = uri.toString()
+                                    val cmidClass =
+                                        QueryClass(
+                                            selectedtype,
+                                            subtype,
+                                            money,
+                                            address,
+                                            disc,
+                                            note,
+                                            uname,
+                                            contact,
+                                            whatsapp,
+                                            cotactime,
+                                            uri1,
+                                            userid,
+                                            Date().time
+                                        )
+                                    queryCollectionRef.document(id).set(cmidClass)
+                                        .addOnSuccessListener {
+                                            val ownQueryClass: OwnQueryClass =
+                                                OwnQueryClass(id, Date().time)
+                                            ownCollectionRef.document(id)
+                                                .set(ownQueryClass)
+                                                .addOnSuccessListener {
+                                                    dialog!!.dismiss()
+                                                    finish()
+                                                    Toast.makeText(
+                                                        this@AddQueryActivity,
+                                                        "Query Uploaded Successfully",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                        }
                                 }
-                            }).addOnFailureListener(object : OnFailureListener {
-                                public override fun onFailure(e: Exception) {
+                        }.addOnFailureListener {
+                            Toast.makeText(
+                                this@AddQueryActivity,
+                                "fail",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            dialog!!.dismiss()
+                        }
+                } else if (image11 == null) {
+                    val cmidClass: QueryClass = QueryClass(
+                        selectedtype,
+                        subtype,
+                        money,
+                        address,
+                        disc,
+                        note,
+                        uname,
+                        contact,
+                        whatsapp,
+                        cotactime,
+                        "No",
+                        userid,
+                        Date().getTime()
+                    )
+                    queryCollectionRef.document(id).set(cmidClass)
+                        .addOnSuccessListener {
+                            val ownQueryClass: OwnQueryClass =
+                                OwnQueryClass(id, Date().getTime())
+                            ownCollectionRef.document(id).set(ownQueryClass)
+                                .addOnSuccessListener {
+                                    dialog!!.dismiss()
+                                    finish()
                                     Toast.makeText(
                                         this@AddQueryActivity,
-                                        "fail",
+                                        "Query Uploaded Successfully",
                                         Toast.LENGTH_SHORT
                                     ).show()
-                                    dialog!!.dismiss()
                                 }
-                            })
-                    } else if (image11 == null) {
-                        val cmidClass: QueryClass = QueryClass(
-                            selectedtype,
-                            subtype,
-                            money,
-                            address,
-                            disc,
-                            note,
-                            uname,
-                            contact,
-                            whatsapp,
-                            cotactime,
-                            "No",
-                            userid,
-                            Date().getTime()
-                        )
-                        queryCollectionRef.document(id).set(cmidClass)
-                            .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                                public override fun onSuccess(unused: Void?) {
-                                    val ownQueryClass: OwnQueryClass =
-                                        OwnQueryClass(id, Date().getTime())
-                                    ownCollectionRef.document(id).set(ownQueryClass)
-                                        .addOnSuccessListener(object : OnSuccessListener<Void?> {
-                                            public override fun onSuccess(unused: Void?) {
-                                                dialog!!.dismiss()
-                                                finish()
-                                                Toast.makeText(
-                                                    this@AddQueryActivity,
-                                                    "Query Uploaded Successfully",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        })
-                                }
-                            })
-                    } else {
-                        dialog!!.dismiss()
-                        Toast.makeText(this@AddQueryActivity, "Something Wrong", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                        }
                 } else {
-                    if (subtype.isEmpty()) {
-                        binding!!.subtype.setError("तुम्हाला काय करायचे आहे")
-                        dialog!!.dismiss()
-                        Toast.makeText(
-                            this@AddQueryActivity,
-                            "तुम्हाला काय करायचे आहे",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    if (contact.isEmpty()) {
-                        binding!!.querycontact.setError("संपर्क टाका")
-                        dialog!!.dismiss()
-                        Toast.makeText(this@AddQueryActivity, "संपर्क टाका", Toast.LENGTH_SHORT)
-                            .show()
-                    }
+                    dialog!!.dismiss()
+                    Toast.makeText(this@AddQueryActivity, "Something Wrong", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } else {
+                if (subtype.isEmpty()) {
+                    binding!!.subtype.error = "तुम्हाला काय करायचे आहे"
+                    dialog!!.dismiss()
+                    Toast.makeText(
+                        this@AddQueryActivity,
+                        "तुम्हाला काय करायचे आहे",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (contact.isEmpty()) {
+                    binding!!.querycontact.error = "संपर्क टाका"
+                    dialog!!.dismiss()
+                    Toast.makeText(this@AddQueryActivity, "संपर्क टाका", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
-        })
+        }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 11) {
-            binding!!.queryimage.setVisibility(View.VISIBLE)
-            binding!!.queryimage.setImageURI(data!!.getData())
-            image11 = data.getData()
+            binding!!.queryimage.visibility = View.VISIBLE
+            binding!!.queryimage.setImageURI(data!!.data)
+            image11 = data.data
         }
     }
 
