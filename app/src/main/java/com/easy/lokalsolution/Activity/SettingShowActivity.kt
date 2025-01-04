@@ -35,7 +35,7 @@ class SettingShowActivity() : AppCompatActivity() {
         }
         binding!!.contactuswhatsapp.setOnClickListener {
             val wn = "https://wa.me/+917028297606?text= Hi is anyone available?"
-            val intent  = Intent(Intent.ACTION_VIEW)
+            val intent   = Intent(Intent.ACTION_VIEW)
             intent.setData(Uri.parse(wn))
             startActivity(intent)
         }

@@ -6,61 +6,66 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.easy.lokalsolution.Adapter.QueryAdapter
-import com.easy.lokalsolution.Class.QueryClass
+import com.easy.lokalsolution.Factory.QueryViewModelFactory
+import com.easy.lokalsolution.Repository.QueryRepository
+import com.easy.lokalsolution.ViewModel.QueryViewModel
 import com.easy.lokalsolution.databinding.FragmentSecondBinding
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 class SecondFragment() : Fragment() {
     var binding: FragmentSecondBinding? = null
-    var list: ArrayList<QueryClass?> = ArrayList()
-    var adapter: QueryAdapter? = null
+     lateinit var viewModel: QueryViewModel
+    lateinit var adapter: QueryAdapter
     public override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSecondBinding.inflate(inflater, container, false)
-        adapter = QueryAdapter(context, list)
+        adapter = QueryAdapter(context, emptyList())
         binding!!.queryrec.adapter = adapter
-        val layoutManager: LinearLayoutManager = LinearLayoutManager(context)
-        binding!!.queryrec.layoutManager = layoutManager
+         binding!!.queryrec.layoutManager = LinearLayoutManager(context)
         binding!!.shimmer.visibility = View.VISIBLE
         binding!!.shimmer.startShimmer()
-        FirebaseFirestore.getInstance().collection("Nanded")
-            .document("NandedCity").collection("Query")
-            .orderBy("time", Query.Direction.DESCENDING).get()
-            .addOnSuccessListener { queryDocumentSnapshots ->
-                list.clear()
-                for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                    val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                    list.add(data)
-                }
-                adapter!!.notifyDataSetChanged()
-                binding!!.shimmer.visibility = View.GONE
-                binding!!.shimmer.stopShimmer()
-            }
+
+
+        val firebase=FirebaseFirestore.getInstance()
+        val repository=QueryRepository(firebase)
+         viewModel= ViewModelProvider(this, QueryViewModelFactory(repository))[QueryViewModel::class.java]
+
+        viewModel.allquery.observe(viewLifecycleOwner){
+            adapter.updateData(it)
+
+            binding!!.shimmer.visibility = View.GONE
+            binding!!.shimmer.stopShimmer()
+        }
+        viewModel.loadAllQuery()
+
+
+
+
+
+
+
+
+
         binding!!.swiprefresh.setOnRefreshListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allquery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllQuery()
             binding!!.swiprefresh.isRefreshing = false
             Toast.makeText(context, "Data refresh", Toast.LENGTH_SHORT).show()
         }
+
+
         binding!!.sort.setOnClickListener {
             binding!!.sortboxview.visibility = View.VISIBLE
             binding!!.justview.visibility = View.VISIBLE
@@ -69,190 +74,159 @@ class SecondFragment() : Fragment() {
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
         }
+
+
+
         binding!!.allsort.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allquery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "All", Toast.LENGTH_SHORT).show()
         }
+
+
+
+
         binding!!.rentout.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .whereEqualTo("type", "किरायाने देणे (Rent)")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allRentOutQuery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllRentOutQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "किरायाने देणे", Toast.LENGTH_SHORT).show()
         }
+
+
+
+
         binding!!.rentin.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .whereEqualTo("type", "किरायाने पाहिजे (Rent)")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allNeedByRentQuery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllNeedByRentQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "किरायाने पाहिजे", Toast.LENGTH_SHORT).show()
         }
+
+
+
         binding!!.needbuy.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .whereEqualTo("type", "विकत पाहिजे (Buy)")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allBuyQuery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllBuyQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "विकत पाहिजे", Toast.LENGTH_SHORT).show()
         }
+
+
+
+
         binding!!.sellout.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .whereEqualTo("type", "विक्री आहे (Sell)")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allSellQuery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllSellQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "विक्री आहे", Toast.LENGTH_SHORT).show()
         }
+
+
+
+
         binding!!.jobsort.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .whereEqualTo("type", "नोकरी आहे (Job)")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allJobQuery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllJobQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "नोकरी आहे", Toast.LENGTH_SHORT).show()
         }
+
+
+
         binding!!.needjob.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .whereEqualTo("type", "नोकरी पाहिजे (Job)")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allNeedJobQuery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllNeedJobQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "नोकरी पाहिजे", Toast.LENGTH_SHORT).show()
         }
+
+
+
         binding!!.needperson.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .whereEqualTo("type", "कामासाठी व्यक्ती पाहिजे (Need)")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allNeedWorkerQuery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllNeedWorkerQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "कामासाठी व्यक्ती पाहिजे", Toast.LENGTH_SHORT).show()
         }
+
+
+
         binding!!.othersort.setOnClickListener {
             binding!!.shimmer.visibility = View.VISIBLE
             binding!!.shimmer.startShimmer()
-            FirebaseFirestore.getInstance().collection("Nanded")
-                .document("NandedCity").collection("Query")
-                .whereEqualTo("type", "वरील पैकी वेगळे (Other)")
-                .orderBy("time", Query.Direction.DESCENDING).get()
-                .addOnSuccessListener { queryDocumentSnapshots ->
-                    list.clear()
-                    for (snapshot: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                        val data: QueryClass? = snapshot.toObject(QueryClass::class.java)
-                        list.add(data)
-                    }
-                    adapter!!.notifyDataSetChanged()
-                    binding!!.shimmer.visibility = View.GONE
-                    binding!!.shimmer.stopShimmer()
-                }
+            viewModel.allOtherQuery.observe(viewLifecycleOwner){
+                adapter.updateData(it)
+
+                binding!!.shimmer.visibility = View.GONE
+                binding!!.shimmer.stopShimmer()
+            }
+            viewModel.loadAllOtherQuery()
             binding!!.sortboxview.visibility = View.GONE
             binding!!.justview.visibility = View.GONE
             Toast.makeText(context, "other", Toast.LENGTH_SHORT).show()

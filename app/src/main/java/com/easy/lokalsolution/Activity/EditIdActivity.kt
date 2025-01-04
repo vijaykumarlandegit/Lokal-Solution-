@@ -54,8 +54,8 @@ import java.util.Date
         id = intent.getStringExtra("id")
         FirebaseFirestore.getInstance().collection("Nanded")
             .document("NandedCity").collection("Id").document((id)!!)
-            .get().addOnSuccessListener { documentSnapshot ->
-                val snapshot = documentSnapshot.toObject(IdClass::class.java)
+            .get().addOnSuccessListener {
+                val snapshot = it.toObject(IdClass::class.java)
                 val type = snapshot!!.type
                 val coursename = snapshot.cname
                 val coursedetails = snapshot.cdetail

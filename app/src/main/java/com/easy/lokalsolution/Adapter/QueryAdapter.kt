@@ -15,8 +15,18 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class QueryAdapter(var context: Context?, var list: ArrayList<QueryClass?>) :
+class QueryAdapter(var context: Context?, var list: List<QueryClass?>) :
     RecyclerView.Adapter<QueryAdapter.ViewHolder>() {
+
+
+
+    fun updateData(newData: List<QueryClass>) {
+        list = newData
+        notifyDataSetChanged() // Notify the adapter to refresh the RecyclerView
+    }
+
+
+
     private fun getTime(time: String, timestamp: Long?): String {
         val calendar: Calendar = Calendar.getInstance(Locale.ENGLISH)
         calendar.timeInMillis = time.toLong()

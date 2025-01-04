@@ -222,9 +222,7 @@ class ShowDataToOwnerActivity() : AppCompatActivity() {
                         if (!queryDocumentSnapshots.isEmpty) {
                             list3!!.clear()
                             for (snapshot3: DocumentSnapshot in queryDocumentSnapshots.documents) {
-                                val data3: OwnIdClass? = snapshot3.toObject(
-                                    OwnIdClass::class.java
-                                )
+                                val data3: OwnIdClass? = snapshot3.toObject(OwnIdClass::class.java)
                                 list3!!.add(data3)
                             }
                             ownIdAdapter!!.notifyDataSetChanged()

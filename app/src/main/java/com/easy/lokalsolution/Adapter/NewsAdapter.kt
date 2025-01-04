@@ -30,8 +30,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class NewsAdapter(var list: ArrayList<NewsClass?>, var context: Context?) :
-    RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class NewsAdapter(var list: List<NewsClass> ,var context: Context) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
     var `in` = 0
     private fun getTime(time: String, timestamp: Long?): String {
         val calendar = Calendar.getInstance(Locale.ENGLISH)
@@ -40,19 +39,19 @@ class NewsAdapter(var list: ArrayList<NewsClass?>, var context: Context?) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.newssample, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.newssample, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val userr = list[position]
-        val type = userr?.type
-        val title = userr?.title
-        val disc = userr?.disc
-        val id = userr?.id
-        val image = userr?.image
-        val time = userr?.time
-        val tt = userr?.time.toString()
+        val type = userr.type
+        val title = userr.title
+        val disc = userr.disc
+        val id = userr.id
+        val image = userr.image
+        val time = userr.time
+        val tt = userr.time.toString()
         holder.binding.showtimetext.text = getTime(tt, time)
         holder.binding.getnewstitle.text = title
         holder.binding.expandTextView.text = disc
@@ -118,7 +117,7 @@ class NewsAdapter(var list: ArrayList<NewsClass?>, var context: Context?) :
             FirebaseFirestore.getInstance().collection("Like").document((id))
                 .collection("Like").document((FirebaseAuth.getInstance().uid)!!).delete()
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Like Removed", Toast.LENGTH_SHORT).show()
+
                 }
         }
         holder.binding.likeview.setOnClickListener {
