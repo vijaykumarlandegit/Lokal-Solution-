@@ -2,7 +2,6 @@ package com.easy.lokalsolution.Personal
 
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.easy.lokalsolution.databinding.ActivityPersonBinding
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -11,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class PersonActivity : AppCompatActivity() {
 
-    private val personViewModel: PersonViewModel by viewModels()
+   // private val personViewModel: PersonViewModel by viewModels()
 
     private lateinit var database: PersonDatabase
      lateinit var binding: ActivityPersonBinding

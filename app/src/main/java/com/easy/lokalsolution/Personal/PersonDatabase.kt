@@ -15,7 +15,7 @@ abstract class PersonDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: PersonDatabase? = null
 
-        fun getDatabase(context: Context): PersonDatabase {
+        fun getDatabase(context: Context) :PersonDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
