@@ -1,5 +1,6 @@
 package com.easy.lokalsolution.Personal
 
+
 /*
 class PersonAdapter(private val onPersonClick: PersonEntity) : RecyclerView.Adapter<PersonAdapter.PersonViewHolder>() {
 
@@ -38,4 +39,5 @@ class PersonAdapter(private val onPersonClick: PersonEntity) : RecyclerView.Adap
         }
     }
 }
+
 */
