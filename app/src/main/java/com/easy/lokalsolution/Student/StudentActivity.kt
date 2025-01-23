@@ -87,7 +87,7 @@ class StudentActivity : AppCompatActivity() {
             val id = binding.fetchstudentid.text.toString().toIntOrNull()
 
             if (id != null) {
-                studentViewModel.fetchStudentById(id) { student ->
+                studentViewModel.fetchStudentById(id) { student ->// higher order function
                     if (student != null) {
                         binding.showfetchname.text = "Name: ${student.name}"
                         binding.showfetchage.text = "Age: ${student.age}"

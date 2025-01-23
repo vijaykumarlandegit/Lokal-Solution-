@@ -19,6 +19,7 @@ class StudentRepository(private val studentDao: StudentDao) {
     suspend fun getStudentById(studentId: Int): Student? {
         return studentDao.fetchStudentById(studentId)
     }
+
     fun getAllStudents(): LiveData<List<Student>> {
         return studentDao.getAllStudents()
     }

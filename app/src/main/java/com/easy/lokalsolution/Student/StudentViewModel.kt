@@ -9,6 +9,9 @@ class StudentViewModel(private val repository: StudentRepository) : ViewModel() 
 
     val allStudents: LiveData<List<Student>> = repository.getAllStudents()
 
+
+
+
     fun addStudent(student: Student) {
         viewModelScope.launch {
             repository.insertStudent(student)
