@@ -40,11 +40,7 @@
         <activity
             android:name=".Student.StudentActivity"
             android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".Personal.PersonActivity"
@@ -61,7 +57,14 @@
             android:exported="false" />
         <activity
             android:name=".Activity.AddIdActivity"
-            android:exported="false" />
+            android:exported="true">
+           <!-- android:configChanges="orientation|screenSize"-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activity.EditIdActivity"
             android:exported="false" />
@@ -100,7 +103,9 @@
             android:exported="false" />
         <activity
             android:name=".Activity.GetOtherDetailsActivity"
-            android:exported="false" />
+            android:exported="true" >
+
+        </activity>
         <activity
             android:name=".Activity.MutipleIDShowActivity"
             android:exported="false" />

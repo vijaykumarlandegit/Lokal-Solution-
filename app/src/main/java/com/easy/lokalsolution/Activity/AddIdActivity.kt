@@ -31,15 +31,58 @@ class AddIdActivity() : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     var mechtype: String? = null
 
     var dialog: ProgressDialog? = null
+
+
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("spinnerPosition", binding!!.subtype.selectedItemPosition)
+        outState.putString("moreDetails", binding!!.moredetails.text.toString())
+        outState.putString("courseName", binding!!.coursename.text.toString())
+        outState.putString("courseDetails", binding!!.coursedetails.text.toString())
+        outState.putString("experience", binding!!.exptime.text.toString())
+        outState.putString("shopName", binding!!.shopname.text.toString())
+        outState.putString("shopAddress", binding!!.shopaddress.text.toString())
+        outState.putString("customTime", binding!!.customtime.text.toString())
+        outState.putInt("courseRadioGroupCheckedId", binding!!.yescourceradiogroupview.checkedRadioButtonId)
+        outState.putInt("shopRadioGroupCheckedId", binding!!.yesshopradiogroupview.checkedRadioButtonId)
+        outState.putInt("serviceTimeRadioGroupCheckedId", binding!!.servitimergroupview.checkedRadioButtonId)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddIdBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
-         val adapter1 = ArrayAdapter.createFromResource(
-            applicationContext,
+
+
+
+
+
+        val spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item,
+            listOf("Select Query", "Option 1", "Option 2", "Option 3"))
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding!!.subtype.adapter = spinnerAdapter
+        savedInstanceState?.let {
+            binding!!.subtype.setSelection(it.getInt("spinnerPosition", 0))
+            binding!!.moredetails.setText(it.getString("moreDetails"))
+            binding!!.yescourceradiogroupview.check(it.getInt("courseRadioGroupCheckedId"))
+            binding!!.coursename.setText(it.getString("courseName"))
+            binding!!.coursedetails.setText(it.getString("courseDetails"))
+            binding!!.exptime.setText(it.getString("experience"))
+            binding!!.yesshopradiogroupview.check(it.getInt("shopRadioGroupCheckedId"))
+            binding!!.shopname.setText(it.getString("shopName"))
+            binding!!.shopaddress.setText(it.getString("shopAddress"))
+            binding!!.servitimergroupview.check(it.getInt("serviceTimeRadioGroupCheckedId"))
+            binding!!.customtime.setText(it.getString("customTime"))
+        }
+
+        val adapter1 = ArrayAdapter.createFromResource(
+            this, // Use activity context
             R.array.IdType,
             android.R.layout.simple_spinner_item
         )
+
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding!!.subtype.adapter = adapter1
         binding!!.subtype.onItemSelectedListener = this@AddIdActivity

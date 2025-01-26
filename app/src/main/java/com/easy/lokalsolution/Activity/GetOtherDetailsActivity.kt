@@ -22,10 +22,24 @@ class GetOtherDetailsActivity() : AppCompatActivity() {
     var binding: ActivityGetOtherDetailsBinding? = null
     var image11: ImageView? = null
     var selectedImage: Uri? = null
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("key","Android")
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val value=savedInstanceState.getString("key")
+        Toast.makeText(this,value,Toast.LENGTH_SHORT).show()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGetOtherDetailsBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
+
+        binding!!.scroll.isSaveEnabled=false
         val dialog: ProgressDialog = ProgressDialog(this)
         dialog.setMessage("Creating Profile, please wait . . . .")
         dialog.setCancelable(false)
