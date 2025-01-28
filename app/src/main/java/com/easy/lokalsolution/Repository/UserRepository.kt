@@ -4,6 +4,7 @@ import android.util.Log
 import com.easy.lokalsolution.Model.User
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 /*
 class UserRepository(private val apiService: ApiService) {
@@ -26,7 +27,7 @@ class UserRepository(private val apiService: ApiService) {
     }
 }*/
 
-class UserRepository(private val firestore: FirebaseFirestore) {
+class UserRepository @Inject constructor(private val firestore: FirebaseFirestore) {
     suspend fun fetchUsers(): List<User> {
         return try {
             val snapshot = firestore.collection("AllUserG").get().await()
