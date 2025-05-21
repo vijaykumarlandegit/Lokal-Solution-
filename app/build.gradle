@@ -79,15 +79,20 @@ dependencies {
     //RXJava
     implementation "io.reactivex.rxjava3:rxjava:3.1.10"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
-    //Room
 
-    implementation "androidx.room:room-runtime:2.6.1"
-     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7"
+
+    //Room
+    implementation "androidx.room:room-runtime:2.7.1"
+    kapt "androidx.room:room-compiler:2.7.1"
+    implementation 'androidx.room:room-ktx:2.7.1'
+
+
+
+     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.8.7"
 
-  //  annotationProcessor 'androidx.room:room-compiler:2.6.1' // For annotation processing // don't need in in kotlin ,its is for java
-    implementation 'androidx.room:room-ktx:2.6.1' // For Kotlin extensions
-    kapt "androidx.room:room-compiler:2.6.1"
+
+
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
